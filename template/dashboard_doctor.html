@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+</head>
+<body>
+    <h1>The Queens Clinic Calendar</h1>
+    <div class="ribbon">
+        <button onclick="window.location.href='/analytics'">Analytics</button>
+        <button onclick="window.location.href='/settings'">Settings</button>
+        <form action="/logout" method="GET" style="display: inline;">
+            <button type="submit" class="logout">Logout</button>
+        </form>
+    </div>
+
+    <!-- Queue -->
+    <div class="patients">
+        <h2>Patients</h2>
+        <table>
+            <tr>
+                <th>Patient Name</th>
+                <th>Patient Specialty</th>
+                <th>Status</th>
+            </tr>
+
+            {% for patient in PATIENTS %}
+                {% if not patient.get_is_scheduled() %}
+                    <tr class="patient" id="patient-{{ patient.get_number() }}">
+                        <td>{{ patient.get_number() }}</td>
+                        <td>{{ patient.get_specialty() }}</td>
+                        <td>Waiting</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% set patients_assigned = [] %}
+             {% for week in cal %}
+                <tr>
+                    {% for day in week %}
+                        <td class="{% if day == current_day %}today{% endif %}">
+                            {% if day != 0 %}
+
+                                <span class="day-number">{{ day }}</span>
+                                {% for patient in PATIENTS %}
+
+                                    {% if patient.get_date().split('/')[1] | string == day | string %}
+
+                                        <!-- Session cards -->
+                                        <div class="appointment doctor-{{ loop.index % 4 }}" style="height: {{ 20 + patient.get_duration() * 5 }}px;">
+                                            Patient {{ patient.get_number() }} <br>
+                                            {{ patient.get_doctor() }}<br>
+                                            {{ convert_time(patient.get_time()) }} ({{ patient.get_duration() }} mins)
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+
+        </tbody>
+    </table>
+
+</body>
+</html>
