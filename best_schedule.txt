@@ -1,0 +1,8 @@
+1	General Medicine	Dr. Smith	Thursday	600	30	2/13/2025
+2	General Medicine	Dr. Smith	Monday	600	30	2/10/2025
+3	General Medicine	Dr. Smith	Wednesday	600	30	2/12/2025
+4	Cardiology	Dr. Johnson	Wednesday	780	45	2/12/2025
+5	Cardiology	Dr. Johnson	Thursday	780	45	2/13/2025
+6	Cardiology	Dr. Johnson	Friday	780	45	2/14/2025
+7	OBGYN	Dr. Lee	Friday	660	30	2/14/2025
+8	OBGYN	Dr. Lee	Monday	660	30	2/10/2025

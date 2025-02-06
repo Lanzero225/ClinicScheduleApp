@@ -1,0 +1,23 @@
+Add schedule during the week
+Move schedules
+Design (kristine)
+
+CALENDAR
+home.html should display a calendar for the month, not just a week. The view should look like MS Teams.
+In a calendar like Teams, the duration of meeting looks long if the meeting happens for a long time.
+I want that approach for the calendar where a session of a patient in the calendar will look as long based on the length of the session itself.
+
+SCHEDULING APPROACH
+Booking is to be done at the start of the week (In this case, Saturday). So bookings done the prior week will be all assigned on Saturday for the next week.
+At the end of the week (Saturday), in the admin's side, there will be a button that will schedule the current patients. Clicking the button will fill the calendar with the patients.
+This can change to not just the end of the week but any day, depending on the admin.
+
+MOVE SCHEDULES
+If the admin was to move schedules, there must be a way to move schedules around, like a drag and drop approach or a click and place.
+
+IMPROVE CONFIG SO IT REFLECTS
+DOCTOR SIDE
+CSS
+
+30-50%
+DATABASE AND DASHBOARD
