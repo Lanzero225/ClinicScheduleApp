@@ -123,32 +123,21 @@ def dashboard_admin():
     year = now.year
     month = now.month
     current_day = now.day  # Get the current day
-
-    # Set Monday as the first day of the week
     calendar.setfirstweekday(calendar.SUNDAY)
-
     # Generate the calendar for the current month
     cal = calendar.monthcalendar(year, month)
 
     total_days = calendar.monthrange(year, month)[1]
 
     schedule = {}
-    first_day_offset = (calendar.weekday(year, month, 1) + 1) % 7
-
-    current_date = datetime.now()
-    days_until_monday = (7 - current_date.weekday()) % 7  # Get days until next Monday
-    next_monday = current_date + timedelta(days=days_until_monday)
-
-    print("LEN", len(PATIENTS))
-    for patient in PATIENTS:
-        print(patient.get_number())
+    days_until_monday = (7 - now.weekday()) % 7  # Get days until next Monday
+    next_monday = now + timedelta(days=days_until_monday)
 
     # Pass data to the HTML template
     return render_template('dashboard_admin.html', cal=cal, year=year, month=month, current_day=current_day,
                            PATIENTS=PATIENTS,DAYS_OF_WEEK=DAYS_OF_WEEK,schedule=schedule, convert_time=convert_time,
                            total_days=total_days, next_monday=next_monday.day, DOCTOR_SPECIALTIES=DOCTOR_SPECIALTIES,
                            calculate_next_week = calculate_next_week, check_queue=check_queue)
-    # Pass data to the HTML template
 
 
 @app.route('/doctor')
@@ -160,8 +149,6 @@ def dashboard_doctor():
     year = now.year
     month = now.month
     current_day = now.day  # Get the current day
-
-    # Set Monday as the first day of the week
     calendar.setfirstweekday(calendar.SUNDAY)
 
     # Generate the calendar for the current month
@@ -170,15 +157,9 @@ def dashboard_doctor():
     total_days = calendar.monthrange(year, month)[1]
 
     schedule = {}
-    first_day_offset = (calendar.weekday(year, month, 1) + 1) % 7
 
-    current_date = datetime.now()
-    days_until_monday = (7 - current_date.weekday()) % 7  # Get days until next Monday
-    next_monday = current_date + timedelta(days=days_until_monday)
-
-    print("LEN", len(PATIENTS))
-    for patient in PATIENTS:
-        print(patient.get_number())
+    days_until_monday = (7 - now.weekday()) % 7  # Get days until next Monday
+    next_monday = now + timedelta(days=days_until_monday)
 
     # Pass data to the HTML template
     return render_template('dashboard_doctor.html', cal=cal, year=year, month=month, current_day=current_day,
@@ -261,7 +242,8 @@ def run_algorithm():
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()  # Create the database if it doesn't exist
+        db.create_all()
+        # Create local database if it doesn't exist
     app.run(debug=True)
 
 

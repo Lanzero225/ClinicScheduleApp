@@ -18,4 +18,3 @@ def config(file_info):
                 continue
 
             PATIENTS.append(Patient(patient_number, specialty, doctor, day, time, duration, date, True))
-            # Assuming you want to store the data in a dictionary like structure

@@ -111,9 +111,6 @@ MUTATION_RATE = 0.1
 GENERATIONS = 100000
 
 def check_conflict(schedule, doctor, day, time):
-    """
-    Check if a doctor is already booked at the given time on a specific day.
-    """
     # Loop through all existing appointments to check for time conflicts
     for patient, (assigned_doctor, assigned_day, assigned_time, _) in schedule.items():
         if assigned_doctor == doctor and assigned_day == day and assigned_time == time:
@@ -144,8 +141,6 @@ def generate_schedule():
 def initialize_population():
     return [generate_schedule() for _ in range(POPULATION_SIZE)]
 
-
-# Fitness Function
 def evaluate_fitness(schedule: dict):
     score = 0
     doctor_schedule = {doc: {day: [] for day in DAYS_OF_WEEK} for doc in DOCTORS}
@@ -165,11 +160,9 @@ def evaluate_fitness(schedule: dict):
 
     return score
 
-
 def select_parents(population):
     sorted_population = sorted(population, key=evaluate_fitness, reverse=True)
     return sorted_population[:2]
-
 
 def crossover(parent1, parent2):
     child = {}
@@ -189,8 +182,6 @@ def crossover(parent1, parent2):
             # If the patient only exists in parent2, use their data
             doctor, day, time, duration = parent2[patient]
 
-
-        # Check for conflicts: If the doctor already has a patient at this time, adjust
         if check_conflict(child, doctor, day, time):
             available_slots = DOCTOR_AVAILABILITY[doctor][day]
             time_slot = random.choice(available_slots)
@@ -222,7 +213,6 @@ def mutate(schedule):
 
         schedule[patient] = (doctor, day, time_slot, duration)
 
-        # Check for conflicts after mutation
         doctor_schedule = {doc: {day: [] for day in DAYS_OF_WEEK} for doc in DOCTORS}
         for patient, (doctor, day, time, _) in schedule.items():
             if time in doctor_schedule[doctor][day]:
