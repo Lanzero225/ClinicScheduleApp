@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Schedule</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid black;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .doctor-name {
+            font-weight: bold;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); /* Seven columns for each day */
+            gap: 10px;
+        }
+        .calendar .day {
+            border: 1px solid #ccc;
+            padding: 10px;
+            min-height: 200px;
+        }
+        .calendar .day h3 {
+            text-align: center;
+        }
+        .appointment {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Doctor Appointment Scheduling</h1>
+
+    <!-- Button to trigger the algorithm -->
+    <form action="/run_algorithm" method="POST">
+        <button type="submit">Run Scheduling Algorithm</button>
+    </form>
+
+    <!-- Logout Button -->
+    <form action="/logout" method="GET">
+        <button type="submit">Logout</button>
+    </form>
+
+    <!-- Display the schedule in a calendar format -->
+{% if schedule %}
+    <h2>Generated Schedule</h2>
+
+    <!-- Table for schedule -->
+    <table>
+        <thead>
+            <tr>
+                <th>Doctor</th>
+                <th>Specialty</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doctor, specialty in DOCTOR_SPECIALTIES.items() %}
+                <tr>
+                    <td class="doctor-name">{{ doctor }}</td>
+                    <td>{{ specialty }}</td>
+                    <!-- Days Columns -->
+                    {% for day in DAYS_OF_WEEK %}
+                        <td>
+                            {% for patient, (assigned_doctor, assigned_day, assigned_time, duration) in schedule.items() %}
+                                {% if assigned_doctor == doctor and assigned_day == day %}
+                                    {{ convert_time(assigned_time) }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+</body>
+</html>

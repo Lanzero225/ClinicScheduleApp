@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(6, auto);  /* Allow multiple rows for full month */
+            gap: 5px;
+            padding: 10px;
+        }
+
+        .day {
+            border: 1px solid #ccc;
+            padding: 10px;
+            min-height: 100px;
+            position: relative;
+        }
+        .day h3 {
+            margin: 0;
+            font-size: 14px;
+            text-align: left;
+        }
+        .appointment {
+            margin: 5px 0;
+            padding: 5px;
+            font-size: 12px;
+            color: white;
+            border-radius: 5px;
+            position: relative;
+            text-align: center;
+        }
+        /* Color Coding */
+        .doctor-1 { background-color: #3498db; } /* Blue */
+        .doctor-2 { background-color: #2ecc71; } /* Green */
+        .doctor-3 { background-color: #e74c3c; } /* Red */
+        .doctor-4 { background-color: #f39c12; } /* Orange */
+    </style>
+</head>
+<body>
+    <h1>Doctor Appointment Calendar</h1>
+
+    <!-- Logout Button -->
+    <form action="/logout" method="GET">
+        <button type="submit">Logout</button>
+    </form>
+
+    <!-- Queue -->
+    <div class="patients">
+        <h2>Patients</h2>
+        <table>
+            <tr>
+                <th>Patient Name</th>
+                <th>Patient Specialty</th>
+            </tr>
+            {% for patient, specialty in patient_specialties.items() %}
+                <tr class="patient">
+                    <td>{{ patient }}</td>
+                    <td>{{ specialty }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <form action="/run_algorithm" method="POST">
+        <button type="submit">Run Scheduling Algorithm</button>
+    </form>
+
+    {% set patients_assigned = [] %}
+
+    <!-- Calendar -->
+    <div class="calendar">
+        {% set first_day_offset = first_day_offset % 7 %}
+
+        {% set days_of_week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] %}
+
+        {% for day in range(1, total_days + 1) %}  {# Loop over the 28 days of February #}
+            {% set day_name = days_of_week[(day + first_day_offset - 1) % 7] %}  {# Subtract 1 to make the first day Feb 1st correctly position on Saturday #}
+
+            <div class="day">
+                <h3>{{ loop.index }}.{{ day_name }} {{ day }}</h3>
+
+                {% for patient, (doctor, assigned_day, assigned_time, duration) in schedule.items() %}
+                    {% if assigned_day == day_name and patient not in patients_assigned %}
+
+                        <div class="appointment doctor-{{ loop.index % 4 }}" style="height: {{ 20 + duration * 5 }}px;">
+                            {{ doctor }}<br>
+                            {{ convert_time(assigned_time) }} ({{ duration }} mins)
+                        </div>
+                        {% set _ = patients_assigned.append(patient) %}  {# Mark this day as used #}
+
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
